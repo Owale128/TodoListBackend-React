@@ -34,7 +34,7 @@ app.post('/api/post', async (req, res) => {
     }
 });
 
-app.put('/api/todos/:id/complete', async(req, res)=> {
+app.put('/api/complete/:id', async(req, res)=> {
     const id = req.params.id;
     try {
         const todo = await Todo.findById(id);
