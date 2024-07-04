@@ -5,6 +5,7 @@ const app = express();
 const PORT = process.env.PORT || 3000;
 const connectDB = require('./database/db')
 const Todo = require('./model/todoModel')
+const { sendNotification } = require('./oneSignal');
 
 connectDB()
 app.use(cors())
@@ -28,6 +29,15 @@ app.post('/api/post', async (req, res) => {
     });
     try {
         const newTodo = await todo.save()
+
+        const userId = req.body.userId;
+
+        await sendNotification(
+            userId,
+            'Ny Todo tillagd',
+            `"${req.body.title}" har lagts till i din todo-lista.`
+        );
+
         res.status(201).json(newTodo);
     } catch (err) {
         res.status(400).json({message: err.message})
